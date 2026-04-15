@@ -663,9 +663,9 @@ class FormulaController extends Controller
     {
         $request->validate([
             'cod_formula'     => ['required','string','max:30'],
-            'nombre_etiqueta' => ['nullable','string','max:150'],
-            'medico'          => ['nullable','string','max:150'],
-            'paciente'        => ['nullable','string','max:150'],
+            'nombre_etiqueta' => ['required','string','max:150'],
+            'medico'          => ['required','string','max:150'],
+            'paciente'        => ['required','string','max:150'],
         ]);
 
         $userId = Auth::id();

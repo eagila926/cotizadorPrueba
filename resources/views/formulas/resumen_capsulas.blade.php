@@ -9,6 +9,12 @@
     {{-- FORM GUARDAR --}}
     <form action="{{ route('formulas.guardar') }}" method="POST" class="mb-3">
       @csrf
+      @if ($errors->any())
+        <div class="alert alert-danger">
+          Por favor complete los campos obligatorios antes de guardar la fórmula.
+        </div>
+      @endif
+
       <div class="row g-2 align-items-end">
         <div class="col-12 col-md-3">
           <label class="form-label mb-1">Código de fórmula</label>
@@ -17,12 +23,26 @@
 
         <div class="col-12 col-md-3">
           <label class="form-label mb-1">Nombre etiqueta</label>
-          <input type="text" name="nombre_etiqueta" class="form-control" value="{{ old('nombre_etiqueta') }}" placeholder="Ej. SUEÑO PROFUNDO" autocomplete="off">
+          <input type="text" name="nombre_etiqueta" class="form-control @error('nombre_etiqueta') is-invalid @enderror" value="{{ old('nombre_etiqueta') }}" placeholder="Ej. SUEÑO PROFUNDO" autocomplete="off" required>
+          @error('nombre_etiqueta')
+            <div class="invalid-feedback">{{ $message }}</div>
+          @enderror
         </div>
 
         <div class="col-12 col-md-3">
           <label class="form-label mb-1">Médico</label>
-          <input type="text" name="medico" id="medico" class="form-control" value="{{ old('medico') }}" placeholder="Nombre del médico (campo libre)" autocomplete="off">
+          <input type="text" name="medico" id="medico" class="form-control @error('medico') is-invalid @enderror" value="{{ old('medico') }}" placeholder="Nombre del médico (campo libre)" autocomplete="off" required>
+          @error('medico')
+            <div class="invalid-feedback">{{ $message }}</div>
+          @enderror
+        </div>
+
+        <div class="col-12 col-md-3">
+          <label class="form-label mb-1">Paciente</label>
+          <input type="text" name="paciente" class="form-control @error('paciente') is-invalid @enderror" value="{{ old('paciente') }}" placeholder="Nombre del paciente" autocomplete="off" required>
+          @error('paciente')
+            <div class="invalid-feedback">{{ $message }}</div>
+          @enderror
         </div>
       </div>
 

@@ -34,7 +34,7 @@ class FormulasEstController extends Controller
         // Auxiliares
         3393,3395,
         3397,3398,      // ✅ tapa seguridad (3397) y (3398) fuera
-        3291,           // celulosa fuera de la tabla visual
+        //3291           // celulosa fuera de la tabla visual
 
         // Pastilleros fuera de la tabla visual (pero se usan para cálculo)
         3396,3394,
@@ -54,7 +54,15 @@ class FormulasEstController extends Controller
     {
         $excluir = self::printExcludeCodes();
         return $items
-            ->reject(fn($it) => in_array((int)($it->cod_odoo ?? 0), $excluir, true))
+            ->reject(function($it) use ($excluir) {
+                $cod = (int)($it->cod_odoo ?? 0);
+
+                if (in_array($cod, self::CAPSULA_CODES, true)) {
+                    return true;
+                }
+
+                return in_array($cod, $excluir, true);
+            })
             ->values();
     }
 

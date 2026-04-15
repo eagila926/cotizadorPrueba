@@ -31,29 +31,97 @@
         return $s === '' ? '0' : $s;
     }
 
-    // === Distribución asimétrica: balancea por "peso" del texto (nombres largos pesan más) ===
-    function distribuirActivosAsimetrico($items, int $cols = 2) {
-        $cols = max(1, $cols);
-        $buckets = array_fill(0, $cols, ['w' => 0, 'items' => []]);
-
-        foreach ($items as $it) {
-            $nombre = abreviarNombreActivoView($it->activo ?? '');
-            $len = mb_strlen($nombre);
-            $spaces = substr_count($nombre, ' ');
-            $weight = $len + ($spaces * 4);
-
-            $minIdx = 0;
-            for ($i=1; $i<$cols; $i++) {
-                if ($buckets[$i]['w'] < $buckets[$minIdx]['w']) $minIdx = $i;
-            }
-            $buckets[$minIdx]['items'][] = $it;
-            $buckets[$minIdx]['w'] += $weight;
+    function fmtCantidadUfc($v, $unidad) {
+        $u = trim(strtoupper((string)$unidad));
+        if ($u !== 'UFC' || !is_numeric($v)) {
+            return fmtCantidad($v, 2);
         }
 
-        return array_map(fn($b) => collect($b['items']), $buckets);
+        $n = (int) round($v);
+
+        if ($n === 1000000) {
+            return '1 Millon';
+        }
+        if ($n === 2000000) {
+            return '2 Millones';
+        }
+        if ($n === 1000000000) {
+            return '1 Billon';
+        }
+        if ($n === 2000000000) {
+            return '2 Billones';
+        }
+        if ($n >= 1000000000 && $n % 1000000000 === 0) {
+            return ($n / 1000000000) . ' Billones';
+        }
+        if ($n >= 1000000 && $n % 1000000 === 0) {
+            return ($n / 1000000) . ' Millones';
+        }
+
+        return fmtCantidad($v, 2);
+    }
+
+    function unidadPrioritaria($unidad) {
+        $u = trim(strtoupper((string)$unidad));
+        return match ($u) {
+            'UI', 'UND', 'UNIDADES' => 1,
+            'MG', 'MILLIGRAMO', 'MILLIGRAMOS' => 2,
+            'MCG', 'MICROGRAMO', 'MICROGRAMOS' => 3,
+            'UFC' => 4,
+            default => 5,
+        };
+    }
+
+    // === Distribución asimétrica: la última columna debe tener menos elementos ===
+    function distribuirActivosAsimetrico($items, int $cols = 2) {
+        $cols = max(1, $cols);
+        $n = $items->count();
+
+        if ($n === 0) {
+            return array_fill(0, $cols, collect());
+        }
+
+        if ($cols === 2) {
+            $firstCount = (int) ceil($n / 2);
+            $counts = [$firstCount, $n - $firstCount];
+        } elseif ($cols === 3) {
+            $lastCount = max(1, (int) floor($n / 3) - 1);
+            $remaining = $n - $lastCount;
+            $middleCount = (int) floor($remaining / 2);
+            $firstCount = $remaining - $middleCount;
+            $counts = [$firstCount, $middleCount, $lastCount];
+        } else {
+            $base = (int) floor($n / $cols);
+            $remainder = $n % $cols;
+            $counts = array_fill(0, $cols, $base);
+            for ($i = 0; $i < $remainder; $i++) {
+                $counts[$i]++;
+            }
+        }
+
+        $columns = array_map(fn() => collect(), range(0, $cols - 1));
+        $index = 0;
+
+        foreach ($items as $it) {
+            while ($index < $cols && $columns[$index]->count() >= $counts[$index]) {
+                $index++;
+            }
+            if ($index >= $cols) {
+                $index = $cols - 1;
+            }
+            $columns[$index]->push($it);
+        }
+
+        return $columns;
     }
 
     $items = $items ?? collect();
+    $items = $items->sortBy(function($it) {
+        $prioridad = unidadPrioritaria($it->unidad ?? '');
+        $nombre = strtoupper(trim((string)($it->activo ?? '')));
+        return sprintf('%02d-%s', $prioridad, $nombre);
+    })->values();
+
     $totalActivos = $items->count();
 
     // columnas: 2 por defecto, 3 si vienen muchos
@@ -61,13 +129,15 @@
     if ($totalActivos >= 18) $columnas = 3;
 
     // tipografía dinámica para compactar
-    $fsActivo = 20; // px
-    $fsCant  = 20;
+    $fsActivo = 22; // px
+    $fsCant  = 22;
     $lh      = 1.05;
 
-    if ($totalActivos >= 10 && $totalActivos <= 14) { $fsActivo = 18; $fsCant = 18; }
-    if ($totalActivos >= 15 && $totalActivos <= 20) { $fsActivo = 16; $fsCant = 16; }
-    if ($totalActivos >= 21) { $fsActivo = 14; $fsCant = 14; }
+    if ($totalActivos >= 9 && $totalActivos <= 12) { $fsActivo = 18; $fsCant = 18; }
+    elseif ($totalActivos >= 13 && $totalActivos <= 16) { $fsActivo = 16; $fsCant = 16; }
+    elseif ($totalActivos >= 17 && $totalActivos <= 20) { $fsActivo = 14; $fsCant = 14; }
+    elseif ($totalActivos >= 21 && $totalActivos <= 24) { $fsActivo = 12; $fsCant = 12; $lh = 1.0; }
+    elseif ($totalActivos >= 25) { $fsActivo = 11; $fsCant = 11; $lh = 1.0; }
 
     // columnas asimétricas
     $cols = distribuirActivosAsimetrico($items, $columnas);
@@ -81,7 +151,7 @@
     $nombreEtiqueta = (string) ($formula->nombre_etiqueta ?? '');
     $fontSizeTitulo = (mb_strlen($nombreEtiqueta) > 31) ? '25px' : '28px';
 
-    $fechaElaboracion = $fechaElaboracion ?? now()->format('d-m-Y');
+    $fechaElaboracion = $fechaElaboracion ?? now()->format('Y-m-d');
 @endphp
 
 <!doctype html>
@@ -209,7 +279,7 @@
     {{-- Centro --}}
     <div class="center">
       <div class="title editable" contenteditable="true">{{ $nombreEtiqueta }}</div>
-      <div class="comp_editable" contenteditable="true">Composición:</div>
+      <div class="comp_editable" contenteditable="true"><strong>COMPOSICIÓN:</strong></div>
 
       <div class="comp">
         @foreach($cols as $col)
@@ -220,7 +290,7 @@
                   {{ abreviarNombreActivoView($it->activo) }}
                 </div>
                 <div class="comp-cant">
-                  <span class="editable js-num-dec" contenteditable="true">{{ fmtCantidad($it->cantidad, 2) }}</span>
+                  <span class="editable js-num-dec" contenteditable="true">{{ fmtCantidadUfc($it->cantidad, $it->unidad) }}</span>
                   <span class="editable" contenteditable="true">{{ $it->unidad ?? 'mg' }}</span>
                 </div>
               </div>
@@ -231,13 +301,13 @@
 
       <div class="footer">
         <div>
-          DR.(A): <span class="editable" contenteditable="true">{{ $medicoCorto ?? ($formula->medico ?? '-') }}</span><br>
-          Pte: <span class="editable" contenteditable="true"></span><br>
-          POSOLOGÍA: TOMAR <span class="editable js-only-numbers" contenteditable="true">{{ $tomas }}</span> CÁPSULAS DIARIAS
+          <span class="editable" contenteditable="true">Medico Prescriptor:{{ $medicoCorto ?? ($formula->medico ?? '-') }}</span><br>
+          <span class="editable" contenteditable="true">Paciente:</span><br>
+          Dosis:<span class="editable js-only-numbers" contenteditable="true">{{ $tomas }}</span> CÁPSULAS DIARIAS
         </div>
 
         <div>
-          ELAB: <span class="editable" contenteditable="true">{{ $fechaElaboracion }}</span><br>
+          F. ELAB: <span class="editable" contenteditable="true">{{ $fechaElaboracion }}</span><br>
           Despues de abierto, consumir en un periodo maximo de 60 días
         </div>
       </div>
