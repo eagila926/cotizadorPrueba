@@ -301,13 +301,13 @@
 
       <div class="footer">
         <div>
-          <span class="editable" contenteditable="true">Medico Prescriptor:{{ $medicoCorto ?? ($formula->medico ?? '-') }}</span><br>
+          <span class="editable" contenteditable="true">Médico Prescriptor:{{ $medicoCorto ?? ($formula->medico ?? '-') }}</span><br>
           <span class="editable" contenteditable="true">Paciente:</span><br>
-          Dosis:<span class="editable js-only-numbers" contenteditable="true">{{ $tomas }}</span> CÁPSULAS DIARIAS
+          Dosis:<span class="editable js-only-numbers" contenteditable="true">{{ $tomas }}</span> Cápsulas Diarias
         </div>
 
         <div>
-          F. ELAB: <span class="editable" contenteditable="true">{{ $fechaElaboracion }}</span><br>
+          F. Elab: <span class="editable" contenteditable="true">{{ $fechaElaboracion }}</span><br>
           Despues de abierto, consumir en un periodo maximo de 60 días
         </div>
       </div>
