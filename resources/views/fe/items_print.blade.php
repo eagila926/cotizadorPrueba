@@ -118,7 +118,7 @@
             </td>
           </tr>
           <tr>
-            <th style="border:1px solid #333; padding:6px;">LOTE</th>
+            <th style="border:1px solid #333; padding:6px;">TAMAÑO DE LOTE</th>
             <td style="border:1px solid #333; padding:6px;">
               <span id="print-lote">{{ (int)($op?->lote ?? 1) }}</span>
             </td>
