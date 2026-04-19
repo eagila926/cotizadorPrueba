@@ -58,6 +58,28 @@
               </li>
             </ul>
     </li>
+
+    {{-- === ACTIVOS: SOLO ADMIN === --}}
+    <li>
+      <a href="#submenuActivos"
+         data-bs-toggle="collapse"
+         class="nav-link text-white dropdown-toggle {{ request()->routeIs('activos.*') ? 'active' : '' }}">
+        <i class="bi bi-boxes me-2"></i>Activos
+      </a>
+
+      <ul class="collapse nav flex-column ms-3" id="submenuActivos">
+              <li>
+                <a class="dropdown-item" href="{{ route('activos.index') }}">
+                  Gestionar Activos
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{{ route('activos.create') }}">
+                  Nuevo Activo
+                </a>
+              </li>
+            </ul>
+    </li>
     @endif
 
   </ul>

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActivoController;
 use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\FormulasEstController;
 use App\Http\Controllers\OrdenProduccionController;
@@ -26,6 +27,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/usuarios',                  [UserController::class, 'store'])->name('usuarios.store');
     Route::get('/usuarios/{usuario}/editar',  [UserController::class, 'edit'])->name('usuarios.edit');
     Route::put('/usuarios/{usuario}',         [UserController::class,'update'])->name('usuarios.update');
+
+    // Activos (solo admin)
+    Route::get('/activos',                    [ActivoController::class, 'index'])->name('activos.index');
+    Route::get('/activos/crear',              [ActivoController::class, 'create'])->name('activos.create');
+    Route::post('/activos',                   [ActivoController::class, 'store'])->name('activos.store');
+    Route::get('/activos/{activo}/editar',    [ActivoController::class, 'edit'])->name('activos.edit');
+    Route::put('/activos/{activo}',           [ActivoController::class, 'update'])->name('activos.update');
+    Route::delete('/activos/{activo}',        [ActivoController::class, 'destroy'])->name('activos.destroy');
 
     // ===== Fórmulas nuevas =====
     Route::prefix('formulas')->name('formulas.')->group(function () {
