@@ -116,16 +116,35 @@ class FormulasEstController extends Controller
     public function buscar(Request $request)
     {
         $q = trim((string)$request->query('q',''));
+        $tipo = trim((string)$request->query('tipo','')); // 'codigo', 'medico', 'paciente'
+        
         if ($q === '') return response()->json([]);
 
-        $data = Formula::where('codigo','like',"%{$q}%")
-            ->orWhere('nombre_etiqueta','like',"%{$q}%")
-            ->orderBy('codigo')
+        $query = Formula::query();
+
+        // Buscar por código o nombre de fórmula
+        if ($tipo === '' || $tipo === 'codigo') {
+            $query->where(function($sub) use ($q) {
+                $sub->where('codigo', 'like', "%{$q}%")
+                    ->orWhere('nombre_etiqueta', 'like', "%{$q}%");
+            });
+        }
+        // Buscar por médico
+        elseif ($tipo === 'medico') {
+            $query->where('medico', 'like', "%{$q}%");
+        }
+        // Buscar por paciente
+        elseif ($tipo === 'paciente') {
+            $query->where('paciente', 'like', "%{$q}%");
+        }
+
+        $data = $query->orderBy('codigo')
             ->limit(12)
-            ->get(['id','codigo','nombre_etiqueta'])
+            ->get(['id','codigo','nombre_etiqueta','medico','paciente'])
             ->map(fn($f)=>[
                 'id'=>$f->id,
-                'display'=>$f->codigo.' — '.$f->nombre_etiqueta,
+                'display'=>$f->codigo.' — '.$f->nombre_etiqueta
+                    .' | Dr(a): '.$f->medico.' | Paciente: '.$f->paciente,
             ]);
 
         return response()->json($data);
@@ -171,6 +190,16 @@ class FormulasEstController extends Controller
         $itemsAll = $formula->items->values();
         $itemsPrint = self::filterForPrint($itemsAll);
 
+        // Calcular número de frascos (pastilleros)
+        $numFrascos = 0;
+        foreach ($itemsAll as $item) {
+            if (in_array((int)($item->cod_odoo ?? 0), self::PASTILLERO_CODES, true)) {
+                $numFrascos = (int)($item->cantidad ?? 0);
+                break;
+            }
+        }
+        if ($numFrascos <= 0) $numFrascos = 1;
+
         $qf = 'Q.F. Jose Perez';
 
         return view('etiquetas.generica', [
@@ -178,6 +207,7 @@ class FormulasEstController extends Controller
             'items'             => $itemsPrint,
             'qf'                => $qf,
             'fechaElaboracion'  => now()->format('d-m-Y'),
+            'numFrascos'        => $numFrascos,
         ]);
     }
 
@@ -351,7 +381,7 @@ class FormulasEstController extends Controller
      */
     public function itemsPrint(Request $request, int $id)
     {
-        $f = Formula::findOrFail($id, ['id','codigo','nombre_etiqueta','tomas_diarias']);
+        $f = Formula::findOrFail($id, ['id','codigo','nombre_etiqueta','tomas_diarias','medico','paciente']);
 
         $endCodes = self::endCodes();
 

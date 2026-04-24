@@ -15,8 +15,15 @@
       @csrf
       <div class="col-12 col-md-6 position-relative">
         <label class="form-label">Fórmula:</label>
-        <input type="text" id="buscador" class="form-control" placeholder="Ingrese el código o nombre de la fórmula">
-        <input type="hidden" name="formula_id" id="formula_id">
+        <div class="input-group">
+          <select id="tipo_busqueda" class="form-select" style="max-width:140px">
+            <option value="codigo">Código/Nombre</option>
+            <option value="medico">Médico</option>
+            <option value="paciente">Paciente</option>
+          </select>
+          <input type="text" id="buscador" class="form-control" placeholder="Ingrese el código o nombre de la fórmula">
+          <input type="hidden" name="formula_id" id="formula_id">
+        </div>
         <div id="sugerencias" class="list-group position-absolute w-100 shadow-sm"
              style="z-index:1000; display:none; max-height:260px; overflow:auto;"></div>
       </div>
@@ -151,6 +158,7 @@
   const $sugs     = document.getElementById('sugerencias');
   const $idHidden = document.getElementById('formula_id');
   const $btnAdd   = document.getElementById('btn-add');
+  const $tipoBusq = document.getElementById('tipo_busqueda');
 
   let t = null;
 
@@ -168,7 +176,8 @@
     }
 
     t = setTimeout(() => {
-      fetch(`{{ route('fe.buscar') }}?q=` + encodeURIComponent(q))
+      const tipo = $tipoBusq ? $tipoBusq.value : 'codigo';
+      fetch(`{{ route('fe.buscar') }}?q=` + encodeURIComponent(q) + '&tipo=' + encodeURIComponent(tipo))
         .then(r => r.json())
         .then(data => {
           $sugs.innerHTML = '';

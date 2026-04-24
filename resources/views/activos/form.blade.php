@@ -86,6 +86,7 @@
                         <option value="UFC" {{ old('unidad', $activo?->unidad) === 'UFC' ? 'selected' : '' }}>UFC</option>
                         <option value="mg" {{ old('unidad', $activo?->unidad) === 'mg' ? 'selected' : '' }}>mg</option>
                         <option value="mcg" {{ old('unidad', $activo?->unidad) === 'mcg' ? 'selected' : '' }}>mcg</option>
+                        <option value="und" {{ old('unidad', $activo?->unidad) === 'und' ? 'selected' : '' }}>und</option>
                     </select>
                     @error('unidad')
                         <div class="invalid-feedback">{{ $message }}</div>

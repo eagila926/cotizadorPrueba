@@ -40,6 +40,9 @@
       body { padding: 0; }
       .no-print { display:none !important; }
       .print-only { display:block !important; }
+      .op-header { display: block !important; }
+      .op-left, .op-right { width: 100% !important; max-width: 100% !important; }
+      .op-box { width: 100% !important; }
     }
   </style>
 </head>
@@ -75,6 +78,12 @@
           &nbsp;|&nbsp; OP #: <strong>{{ $numero }}</strong>
         @endif
       </p>
+      <p class="sub" style="margin:4px 0 0 0;">
+        Médico: <strong>{{ $f->medico ?: '-' }}</strong>
+      </p>
+      <p class="sub" style="margin:4px 0 0 0;">
+        Paciente: <strong>{{ $f->paciente ?: '-' }}</strong>
+      </p>
     </div>
 
     <div class="op-right">
@@ -91,7 +100,7 @@
           </div>
 
           <div class="op-field">
-            <label>LOTE (multiplicador)</label>
+            <label>TAMAÑO DE LOTE</label>
             <input type="number" id="inp-lote" min="1" step="1" value="{{ (int)($op?->lote ?? 1) }}">
           </div>
 
@@ -138,7 +147,7 @@
       <thead>
         <tr>
           <th style="width:90px;">Código</th>
-          <th>Activo</th>
+          <th>Principio Activo</th>
           <th class="right" style="width:110px;">Cantidad</th>
           <th style="width:70px;">Unidad</th>
           <th class="right" style="width:110px;">Masa G</th>

@@ -32,9 +32,9 @@ class FormulaController extends Controller
     private const COD_EXTRA_2     = 3435;
     private const COD_EXTRA_3     = 3436;
 
-    private const COD_CELULOSA    = 3291;
+    private const COD_SILICA_GEL  = 4576;
 
-    // Capacidades
+    private const COD_CELULOSA    = 3291;
     private const PAST_CAP_SMALL = 30;
     private const PAST_CAP_LARGE = 120;
 
@@ -430,6 +430,7 @@ class FormulaController extends Controller
             self::COD_EXTRA_1,
             self::COD_EXTRA_2,
             self::COD_EXTRA_3,
+            self::COD_SILICA_GEL,
         ]);
         $cods = array_values(array_unique($cods));
 
@@ -586,6 +587,20 @@ class FormulaController extends Controller
             if ($mode === 'save') $rowFix['masa_mes'] = null;
             $rows->push($rowFix);
         }
+
+        // Silica Gel (uno por pastillero)
+        $rowSilica = [
+            'cod_odoo'  => self::COD_SILICA_GEL,
+            'activo'    => $catalogo[self::COD_SILICA_GEL]->nombre ?? 'Silica Gel',
+            'cantidad'  => (float)$pastCount,
+            'unidad'    => 'und',
+            'mg_dia'    => null,
+            'densidad'  => null,
+            'vol_dia'   => null,
+        ];
+        if ($withCost) $rowSilica['valor_costo'] = (float)($catalogo[self::COD_SILICA_GEL]->valor_costo ?? 0);
+        if ($mode === 'save') $rowSilica['masa_mes'] = null;
+        $rows->push($rowSilica);
 
         return [
             'rows'          => $rows,
@@ -762,9 +777,10 @@ class FormulaController extends Controller
             self::COD_EXTRA_1,
             self::COD_EXTRA_2,
             self::COD_EXTRA_3,
+            self::COD_SILICA_GEL,
         ];
 
-        $regexExcluir = '/(celulosa|capsula|cápsula|capsulas|cápsulas|pastillero|pastilleros|tapa|linner|etiqueta|3434|3435|3436|3394|3396)/i';
+        $regexExcluir = '/(celulosa|capsula|cápsula|capsulas|cápsulas|pastillero|pastilleros|tapa|linner|etiqueta|silica|gel|3434|3435|3436|4576|3394|3396)/i';
 
         DB::transaction(function () use ($userId, $formula, $codsExcluir, $regexExcluir) {
             ActivoTemp::where('user_id', $userId)->delete();

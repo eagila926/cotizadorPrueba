@@ -116,6 +116,11 @@
     }
 
     $items = $items ?? collect();
+    $items = $items->reject(function($it) {
+        // Quitar celulosa de la composición
+        return (int)($it->cod_odoo ?? 0) === 3291;
+    })->values();
+    
     $items = $items->sortBy(function($it) {
         $prioridad = unidadPrioritaria($it->unidad ?? '');
         $nombre = strtoupper(trim((string)($it->activo ?? '')));
@@ -129,15 +134,15 @@
     if ($totalActivos >= 18) $columnas = 3;
 
     // tipografía dinámica para compactar
-    $fsActivo = 22; // px
-    $fsCant  = 22;
+    $fsActivo = 26; // px - aumentado de 22
+    $fsCant  = 26;  // aumentado de 22
     $lh      = 1.05;
 
-    if ($totalActivos >= 9 && $totalActivos <= 12) { $fsActivo = 18; $fsCant = 18; }
-    elseif ($totalActivos >= 13 && $totalActivos <= 16) { $fsActivo = 16; $fsCant = 16; }
-    elseif ($totalActivos >= 17 && $totalActivos <= 20) { $fsActivo = 14; $fsCant = 14; }
-    elseif ($totalActivos >= 21 && $totalActivos <= 24) { $fsActivo = 12; $fsCant = 12; $lh = 1.0; }
-    elseif ($totalActivos >= 25) { $fsActivo = 11; $fsCant = 11; $lh = 1.0; }
+    if ($totalActivos >= 9 && $totalActivos <= 12) { $fsActivo = 22; $fsCant = 22; }
+    elseif ($totalActivos >= 13 && $totalActivos <= 16) { $fsActivo = 20; $fsCant = 20; }
+    elseif ($totalActivos >= 17 && $totalActivos <= 20) { $fsActivo = 18; $fsCant = 18; }
+    elseif ($totalActivos >= 21 && $totalActivos <= 24) { $fsActivo = 16; $fsCant = 16; $lh = 1.0; }
+    elseif ($totalActivos >= 25) { $fsActivo = 14; $fsCant = 14; $lh = 1.0; }
 
     // columnas asimétricas
     $cols = distribuirActivosAsimetrico($items, $columnas);
@@ -146,6 +151,12 @@
     $tomas = (int) ($formula->tomas_diarias ?? 3);
     $dias  = 30;
     $contieneCaps = $tomas * $dias;
+    
+    // Número de frascos
+    $numFrascos = (int) ($numFrascos ?? 1);
+    
+    // Cápsulas por frasco
+    $capsPerFrasco = $numFrascos > 0 ? (int)($contieneCaps / $numFrascos) : $contieneCaps;
 
     // Título
     $nombreEtiqueta = (string) ($formula->nombre_etiqueta ?? '');
@@ -301,21 +312,21 @@
 
       <div class="footer">
         <div>
-          <span class="editable" contenteditable="true">Médico Prescriptor:{{ $medicoCorto ?? ($formula->medico ?? '-') }}</span><br>
-          <span class="editable" contenteditable="true">Paciente:</span><br>
-          Dosis:<span class="editable js-only-numbers" contenteditable="true">{{ $tomas }}</span> Cápsulas Diarias
+        <span class="editable js-only-numbers" contenteditable="true">Dosis: {{ $tomas }} Cápsulas Diarias </span><br>  
+        <span class="editable" contenteditable="true">Médico Prescriptor:{{ $medicoCorto ?? ($formula->medico ?? '-') }}</span><br>
+          <span class="editable" contenteditable="true">Paciente: {{ $formula->paciente ?? '-' }}</span>
         </div>
 
         <div>
           F. Elab: <span class="editable" contenteditable="true">{{ $fechaElaboracion }}</span><br>
-          Despues de abierto, consumir en un periodo maximo de 60 días
+          Despues de abierto, consumir en un periodo máximo de 60 días
         </div>
       </div>
     </div>
 
     {{-- Banda vertical derecha --}}
     <div class="vertical editable" contenteditable="true">
-      <span class="vertical-text">CONTENIDO: {{ $contieneCaps }} CAPSULAS</span>
+      <span class="vertical-text">CONTENIDO: {{ $capsPerFrasco }} CAPSULAS</span>
     </div>
 
   </div>
