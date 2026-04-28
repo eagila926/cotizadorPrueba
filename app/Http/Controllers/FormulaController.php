@@ -430,7 +430,6 @@ class FormulaController extends Controller
             self::COD_EXTRA_1,
             self::COD_EXTRA_2,
             self::COD_EXTRA_3,
-            self::COD_SILICA_GEL,
         ]);
         $cods = array_values(array_unique($cods));
 
@@ -589,18 +588,19 @@ class FormulaController extends Controller
         }
 
         // Silica Gel (uno por pastillero)
-        $rowSilica = [
-            'cod_odoo'  => self::COD_SILICA_GEL,
-            'activo'    => $catalogo[self::COD_SILICA_GEL]->nombre ?? 'Silica Gel',
-            'cantidad'  => (float)$pastCount,
-            'unidad'    => 'und',
-            'mg_dia'    => null,
-            'densidad'  => null,
-            'vol_dia'   => null,
-        ];
-        if ($withCost) $rowSilica['valor_costo'] = (float)($catalogo[self::COD_SILICA_GEL]->valor_costo ?? 0);
-        if ($mode === 'save') $rowSilica['masa_mes'] = null;
-        $rows->push($rowSilica);
+        // DESHABILITADO: No mostrar en etiqueta ni hoja de producción
+        // $rowSilica = [
+        //     'cod_odoo'  => self::COD_SILICA_GEL,
+        //     'activo'    => $catalogo[self::COD_SILICA_GEL]->nombre ?? 'Silica Gel',
+        //     'cantidad'  => (float)$pastCount,
+        //     'unidad'    => 'und',
+        //     'mg_dia'    => null,
+        //     'densidad'  => null,
+        //     'vol_dia'   => null,
+        // ];
+        // if ($withCost) $rowSilica['valor_costo'] = (float)($catalogo[self::COD_SILICA_GEL]->valor_costo ?? 0);
+        // if ($mode === 'save') $rowSilica['masa_mes'] = null;
+        // $rows->push($rowSilica);
 
         return [
             'rows'          => $rows,
@@ -777,10 +777,9 @@ class FormulaController extends Controller
             self::COD_EXTRA_1,
             self::COD_EXTRA_2,
             self::COD_EXTRA_3,
-            self::COD_SILICA_GEL,
         ];
 
-        $regexExcluir = '/(celulosa|capsula|cápsula|capsulas|cápsulas|pastillero|pastilleros|tapa|linner|etiqueta|silica|gel|3434|3435|3436|4576|3394|3396)/i';
+        $regexExcluir = '/(celulosa|capsula|cápsula|capsulas|cápsulas|pastillero|pastilleros|tapa|linner|etiqueta|silica|gel|3434|3435|3436|3394|3396)/i';
 
         DB::transaction(function () use ($userId, $formula, $codsExcluir, $regexExcluir) {
             ActivoTemp::where('user_id', $userId)->delete();
