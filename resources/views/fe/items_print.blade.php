@@ -40,8 +40,9 @@
       body { padding: 0; }
       .no-print { display:none !important; }
       .print-only { display:block !important; }
-      .op-header { display: block !important; }
-      .op-left, .op-right { width: 100% !important; max-width: 100% !important; }
+      .op-header { display: flex !important; justify-content: space-between !important; }
+      .op-left { width: auto !important; max-width: 65% !important; flex: 1 1 auto !important; }
+      .op-right { width: 320px !important; max-width: 320px !important; flex: 0 0 320px !important; }
       .op-box { width: 100% !important; }
     }
   </style>
