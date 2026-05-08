@@ -29,12 +29,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/usuarios/{usuario}',         [UserController::class,'update'])->name('usuarios.update');
 
     // Activos (solo admin)
-    Route::get('/activos',                    [ActivoController::class, 'index'])->name('activos.index');
-    Route::get('/activos/crear',              [ActivoController::class, 'create'])->name('activos.create');
-    Route::post('/activos',                   [ActivoController::class, 'store'])->name('activos.store');
-    Route::get('/activos/{activo}/editar',    [ActivoController::class, 'edit'])->name('activos.edit');
-    Route::put('/activos/{activo}',           [ActivoController::class, 'update'])->name('activos.update');
-    Route::delete('/activos/{activo}',        [ActivoController::class, 'destroy'])->name('activos.destroy');
+    Route::middleware('can:is-admin')->group(function () {
+        Route::get('/activos',                    [ActivoController::class, 'index'])->name('activos.index');
+        Route::get('/activos/crear',              [ActivoController::class, 'create'])->name('activos.create');
+        Route::post('/activos',                   [ActivoController::class, 'store'])->name('activos.store');
+        Route::get('/activos/{activo}/editar',    [ActivoController::class, 'edit'])->name('activos.edit');
+        Route::put('/activos/{activo}',           [ActivoController::class, 'update'])->name('activos.update');
+        Route::delete('/activos/{activo}',        [ActivoController::class, 'destroy'])->name('activos.destroy');
+    });
 
     // ===== Fórmulas nuevas =====
     Route::prefix('formulas')->name('formulas.')->group(function () {

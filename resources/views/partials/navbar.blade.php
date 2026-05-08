@@ -58,8 +58,10 @@
               </li>
             </ul>
     </li>
+    @endif
 
     {{-- === ACTIVOS: SOLO ADMIN === --}}
+    @can('is-admin')
     <li>
       <a href="#submenuActivos"
          data-bs-toggle="collapse"
@@ -80,7 +82,7 @@
               </li>
             </ul>
     </li>
-    @endif
+    @endcan
 
   </ul>
 
