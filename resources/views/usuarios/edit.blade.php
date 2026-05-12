@@ -43,11 +43,16 @@
                     <label>Rol</label>
                     <select name="rol" class="form-control" required>
                         <option value="">Seleccione un rol</option>
-                        @foreach(['ADMIN1','VISITADOR'] as $rol)
-                            <option value="{{ $rol }}" {{ old('rol', $usuario->rol) === $rol ? 'selected' : '' }}>
-                                {{ $rol }}
-                            </option>
-                        @endforeach
+
+                        <option value="ADMIN"
+                            {{ old('rol', $usuario->rol) == 'ADMIN' ? 'selected' : '' }}>
+                            Administrador
+                        </option>
+
+                        <option value="VISITADOR"
+                            {{ old('rol', $usuario->rol) == 'VISITADOR' ? 'selected' : '' }}>
+                            Visitador
+                        </option>
                     </select>
                 </div>
             </div>
