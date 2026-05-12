@@ -548,6 +548,7 @@ class FormulaController extends Controller
             [self::COD_TAPA_SEG, 'TAPA DE SEGURIDAD'],
             [self::COD_LINNER,   'LINNER ESPUMADO'],
             [self::COD_ETIQUETA, 'ETIQUETA'],
+            [self::COD_SILICA_GEL, 'Silica Gel'],
         ];
 
         foreach ($insumosPorPastillero as [$cod, $fallbackNombre]) {

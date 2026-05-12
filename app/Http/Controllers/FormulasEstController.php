@@ -38,6 +38,9 @@ class FormulasEstController extends Controller
 
         // Pastilleros fuera de la tabla visual (pero se usan para cálculo)
         3396,3394,
+
+        // Silica Gel (no mostrar en etiqueta ni hoja de producción)
+        4576,
     ];
 
     private static function endCodes(): array
