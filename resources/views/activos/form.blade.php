@@ -31,7 +31,6 @@
                         id="cod_odoo" 
                         name="cod_odoo"
                         value="{{ old('cod_odoo', $activo?->cod_odoo) }}"
-                        {{ $activo ? 'readonly' : '' }}
                         required
                     >
                     @error('cod_odoo')

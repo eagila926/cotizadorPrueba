@@ -47,6 +47,7 @@ class FormulaController extends Controller
     private const UI_TO_MG = [
         3388 => 0.000025, // Vit D3
         3381 => 0.00055,  // Vit A
+        3753 => 1.0,      //Ttocotrienol              
         3375 => 1.0,      // Vit E
     ];
 

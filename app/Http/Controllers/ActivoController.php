@@ -84,6 +84,7 @@ class ActivoController extends Controller
         $this->authorizeAdmin();
 
         $request->validate([
+            'cod_odoo'      => 'required|integer|unique:activos,cod_odoo,' . $activo->cod_odoo . ',cod_odoo',
             'nombre'        => 'required|string|max:255',
             'valor_costo'   => 'required|numeric|min:0',
             'unidad'        => 'required|string|max:10',
@@ -91,6 +92,7 @@ class ActivoController extends Controller
         ]);
 
         $activo->update([
+            'cod_odoo'      => $request->cod_odoo,
             'nombre'        => $request->nombre,
             'valor_costo'   => $request->valor_costo,
             'unidad'        => $request->unidad,
