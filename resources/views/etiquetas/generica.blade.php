@@ -182,8 +182,8 @@
     align-items: start;
   }
 
-  /* Bloque izquierdo: NO mostramos nada (solo reserva espacio). */
-  .left-spacer { min-height: 1px; }
+  /* Banda vertical izquierda */
+  .vertical-left { justify-self: end; }
 
   .center { min-width: 0; }
 
@@ -284,8 +284,10 @@
 <div class="wrap">
   <div class="label-grid">
 
-    {{-- Reserva espacio izquierdo (precauciones del diseño físico) --}}
-    <div class="left-spacer"></div>
+    {{-- Banda vertical izquierda --}}
+    <div class="vertical vertical-left editable" contenteditable="true">
+      <span class="vertical-text">{{ $formula->codigo }}</span>
+    </div>
 
     {{-- Centro --}}
     <div class="center">
