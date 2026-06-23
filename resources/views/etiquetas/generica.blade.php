@@ -252,6 +252,10 @@
     margin-top:60px;
   }
 
+  .vertical.vertical-left {
+    font-weight: 400;
+  }
+
   /* ✅ De abajo hacia arriba: rotamos SOLO el texto */
   .vertical .vertical-text{
     display: inline-block;
@@ -286,7 +290,7 @@
 
     {{-- Banda vertical izquierda --}}
     <div class="vertical vertical-left editable" contenteditable="true">
-      <span class="vertical-text">{{ $formula->codigo }}</span>
+      <p class="vertical-text">{{ $formula->codigo }}</p>
     </div>
 
     {{-- Centro --}}

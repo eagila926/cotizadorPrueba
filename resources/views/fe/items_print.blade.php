@@ -20,7 +20,8 @@
     .btn-primary { background:#111; color:#fff; }
     .btn-outline { background:#fff; color:#111; }
 
-    .block { break-inside: avoid; page-break-inside: avoid; }
+    .block { margin-bottom: 8px; }
+    .avoid-break { break-inside: avoid; page-break-inside: avoid; }
 
     .op-header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:8px; }
     .op-left { flex: 1; min-width: 320px; }
@@ -44,6 +45,9 @@
       .op-left { width: auto !important; max-width: 65% !important; flex: 1 1 auto !important; }
       .op-right { width: 320px !important; max-width: 320px !important; flex: 0 0 320px !important; }
       .op-box { width: 100% !important; }
+      thead { display: table-header-group; }
+      tfoot { display: table-footer-group; }
+      tr { break-inside: avoid; page-break-inside: avoid; }
     }
   </style>
 </head>
@@ -65,7 +69,7 @@
     <button id="btn-print-now" class="btn btn-primary" {{ empty($op?->id) ? 'disabled' : '' }}>Imprimir</button>
   </div>
 
-  <div class="block op-header">
+  <div class="block avoid-break op-header">
     <div class="op-left">
       <h1>Orden de Producción</h1>
       @php
@@ -138,7 +142,7 @@
     </div>
   </div>
 
-  <div class="block">
+  <div class="block avoid-break">
     <h2>Ítems de la fórmula</h2>
     <p class="sub">{{ $f->codigo }} — {{ $f->nombre_etiqueta }}</p>
   </div>
@@ -194,7 +198,7 @@
   </div>
 
   {{-- Resumen --}}
-  <div class="block" style="margin-top: 10px;">
+  <div class="block avoid-break" style="margin-top: 10px;">
     <table>
       <tbody>
         <tr>
@@ -227,7 +231,7 @@
   </div>
 
   {{-- PRESENTACIÓN --}}
-  <div class="block" style="margin-top: 10px;">
+  <div class="block avoid-break" style="margin-top: 10px;">
     <table>
       <tbody>
         <tr>
