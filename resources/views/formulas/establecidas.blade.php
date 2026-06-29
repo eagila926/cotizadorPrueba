@@ -94,34 +94,34 @@
               {{-- Precio Médico --}}
               <td style="min-width:140px">
                 @if($isAdmin)
-                  <input type="number" step="0.01" min="0"
+                  <input type="number" step="0.0001" min="0"
                         class="form-control form-control-sm precio-input"
                         data-field="precio_medico"
-                        value="{{ number_format((float)$r->precio_medico, 2, '.', '') }}">
+                        value="{{ number_format((float)$r->precio_medico, 4, '.', '') }}">
                 @else
-                  <span class="fw-semibold">{{ number_format((float)$r->precio_medico, 2) }}</span>
+                  <span class="fw-semibold">{{ number_format((float)$r->precio_medico, 4) }}</span>
                 @endif
               </td>
 
               {{-- Precio Distribuidor: SOLO ADMIN --}}
               @if($isAdmin)
               <td style="min-width:140px">
-                <input type="number" step="0.01" min="0"
+                <input type="number" step="0.0001" min="0"
                       class="form-control form-control-sm precio-input"
                       data-field="precio_distribuidor"
-                      value="{{ number_format((float)$r->precio_distribuidor, 2, '.', '') }}">
+                      value="{{ number_format((float)$r->precio_distribuidor, 4, '.', '') }}">
               </td>
               @endif
 
               {{-- Precio Público / Paciente --}}
               <td style="min-width:140px">
                 @if($isAdmin)
-                  <input type="number" step="0.01" min="0"
+                  <input type="number" step="0.0001" min="0"
                         class="form-control form-control-sm precio-input"
                         data-field="precio_publico"
-                        value="{{ number_format((float)$r->precio_publico, 2, '.', '') }}">
+                        value="{{ number_format((float)$r->precio_publico, 4, '.', '') }}">
                 @else
-                  <span class="fw-semibold">{{ number_format((float)$r->precio_publico, 2) }}</span>
+                  <span class="fw-semibold">{{ number_format((float)$r->precio_publico, 4) }}</span>
                 @endif
               </td>
 

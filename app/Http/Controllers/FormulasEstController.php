@@ -27,7 +27,7 @@ class FormulasEstController extends Controller
     // ✅ EXCLUSIÓN PARA IMPRESIÓN (etiqueta / items_print visual)
     // Nota: NO excluyo capsulas aquí porque las quiero visibles en items_print.
     private const PRINT_EXCLUDE_CODES = [
-        3740,3742,3744,3743,3739,
+        3740,3742,3743,3739,
         1078,1077,1219,70276,70271,71497,
         3436,3435,3434,
 
@@ -358,16 +358,16 @@ class FormulasEstController extends Controller
     {
         $data = $request->validate([
             'id' => ['required','integer','exists:formulas,id'],
-            'precio_medico'       => ['nullable','numeric','min:0'],
-            'precio_distribuidor' => ['nullable','numeric','min:0'],
-            'precio_publico'      => ['nullable','numeric','min:0'],
+            'precio_medico'       => ['nullable','numeric','min:0','regex:/^\d+(\.\d{1,4})?$/'],
+            'precio_distribuidor' => ['nullable','numeric','min:0','regex:/^\d+(\.\d{1,4})?$/'],
+            'precio_publico'      => ['nullable','numeric','min:0','regex:/^\d+(\.\d{1,4})?$/'],
         ]);
 
         $f = Formula::findOrFail((int)$data['id']);
 
-        if ($data['precio_medico'] !== null)       $f->precio_medico       = round((float)$data['precio_medico'], 2);
-        if ($data['precio_distribuidor'] !== null) $f->precio_distribuidor = round((float)$data['precio_distribuidor'], 2);
-        if ($data['precio_publico'] !== null)      $f->precio_publico      = round((float)$data['precio_publico'], 2);
+        if ($data['precio_medico'] !== null)       $f->precio_medico       = round((float)$data['precio_medico'], 4);
+        if ($data['precio_distribuidor'] !== null) $f->precio_distribuidor = round((float)$data['precio_distribuidor'], 4);
+        if ($data['precio_publico'] !== null)      $f->precio_publico      = round((float)$data['precio_publico'], 4);
 
         $f->save();
 

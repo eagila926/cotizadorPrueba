@@ -62,7 +62,7 @@
                         class="form-control @error('valor_costo') is-invalid @enderror" 
                         id="valor_costo" 
                         name="valor_costo"
-                        step="0.01"
+                        step="any"
                         value="{{ old('valor_costo', $activo?->valor_costo) }}"
                         required
                     >
@@ -100,7 +100,7 @@
                         class="form-control @error('densidad') is-invalid @enderror" 
                         id="densidad" 
                         name="densidad"
-                        step="0.0001"
+                        step="any"
                         value="{{ old('densidad', $activo?->densidad) }}"
                         required
                     >

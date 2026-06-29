@@ -21,9 +21,9 @@ class Formula extends Model
     ];
 
     protected $casts = [
-        'precio_medico'       => 'decimal:2',
-        'precio_publico'      => 'decimal:2',
-        'precio_distribuidor' => 'decimal:2',
+        'precio_medico'       => 'decimal:4',
+        'precio_publico'      => 'decimal:4',
+        'precio_distribuidor' => 'decimal:4',
         'tomas_diarias'       => 'decimal:2',
     ];
 

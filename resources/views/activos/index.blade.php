@@ -31,7 +31,7 @@
                     <tr>
                         <td>{{ $activo->cod_odoo }}</td>
                         <td>{{ $activo->nombre }}</td>
-                        <td>${{ number_format($activo->valor_costo, 2) }}</td>
+                        <td>${{ number_format($activo->valor_costo, 6) }}</td>
                         <td>{{ $activo->unidad }}</td>
                         <td>{{ number_format($activo->densidad, 4) }}</td>
                         <td>
