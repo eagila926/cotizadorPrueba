@@ -27,9 +27,7 @@ class FormulasEstController extends Controller
     // ✅ EXCLUSIÓN PARA IMPRESIÓN (etiqueta / items_print visual)
     // Nota: NO excluyo capsulas aquí porque las quiero visibles en items_print.
     private const PRINT_EXCLUDE_CODES = [
-        3740,3742,3743,3739,
-        1078,1077,1219,70276,70271,71497,
-        3436,3435,3434,
+        3436,3435,3434,3392,3994,3434,3394,3395,3436,
 
         // Auxiliares
         3393,3395,
